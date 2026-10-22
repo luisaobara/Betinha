@@ -25,7 +25,7 @@
 **Exemplo:** Num cara ou coroa justo, a odd certa seria 2,00 para cada lado. Se a casa paga 1,90 nos dois, a cada R$ 100 apostados ela devolve, em média, R$ 95. Os R$ 5 de diferença são o lucro dela, seja qual for o lado sorteado.
 **Simulador:** No Simulador, veja a linha "Apostando: caso típico" ficar cada vez mais abaixo de "Dinheiro que você colocou".
 **Quer saber mais?** Nome técnico: vantagem da casa (house edge) e valor esperado negativo. Pergunta relacionada: "O que é valor esperado?"
-**Fonte:** Grupo A2, Conteúdo II e IV (2026); Pinnacle Odds Dropper, "Overround".
+**Fonte:** Pinnacle Odds Dropper, "Overround".
 
 ## Pergunta: O que é uma odd justa?
 **Também perguntam:** fair odd; odd sem margem; odd verdadeira; quanto a odd deveria pagar
@@ -33,4 +33,4 @@
 **Explicação:** Para achar a odd justa, primeiro tira-se a margem da chance implícita e depois se faz 1 dividido pela chance corrigida. A diferença entre a odd justa e a odd da tela é o quanto a casa está cobrando.
 **Exemplo:** No jogo com soma de 103,6%, a vitória com odd 2,00 tem chance corrigida de 50% ÷ 1,036 ≈ 48,3%. A odd justa seria 1 ÷ 0,483 ≈ 2,07. A casa paga 2,00.
 **Quer saber mais?** Nome técnico: odd justa (fair odd). Pergunta relacionada: "Por que a casa de apostas sempre ganha no longo prazo?"
-**Fonte:** Grupo A2, Conteúdo IV (2026), cálculos previstos do simulador; Pinnacle Odds Dropper, "Overround".
+**Fonte:** Cálculos previstos do simulador; Pinnacle Odds Dropper, "Overround".
