@@ -39,7 +39,7 @@
 **Exemplo:** Três jogos, cada um com 50% de chance de dar certo. A chance de acertar os três é 50% × 50% × 50% = 12,5%, ou seja, você erra o bilhete em 7 de cada 8 vezes. Com 8 jogos a 50% cada, a chance de acertar tudo cai para menos de 0,4%.
 **Simulador:** Para ver o efeito no bolso, coloque no Simulador uma odd alta, que é o que uma múltipla costuma ter, e compare com uma odd baixa.
 **Quer saber mais?** Nome técnico: probabilidade composta de eventos independentes. Pergunta relacionada: "Por que eu sinto que quase ganhei quando erro só um jogo da múltipla?"
-**Fonte:** Bussab & Morettin, Estatística Básica; Meyer, Probabilidade: aplicações à estatística; Grupo A2, Conteúdo IV (2026).
+**Fonte:** Bussab & Morettin, Estatística Básica; Meyer, Probabilidade: aplicações à estatística.
 
 ## Pergunta: O que é aposta ao vivo e cash-out?
 **Também perguntam:** apostar durante o jogo; in-play; o que é encerrar aposta; vale a pena fazer cash-out
@@ -47,4 +47,4 @@
 **Explicação:** Ao vivo, as odds mudam a cada lance e dá para apostar várias vezes no mesmo jogo, o que deixa as apostas muito mais rápidas e frequentes. No cash-out, a casa calcula o valor oferecido já com a margem dela, então, na média, quem encerra recebe menos do que seria justo. A vontade de "garantir logo" o lucro, ou de segurar uma aposta perdida esperando a virada, é um viés conhecido.
 **Exemplo:** Seu time está ganhando aos 30 minutos e a casa oferece R$ 15 por uma aposta que pagaria R$ 25 no final. Encerrar parece seguro, mas esse valor já vem descontado da margem da casa.
 **Quer saber mais?** Nome técnico: efeito de disposição. Pergunta relacionada: "Apostas esportivas são tão perigosas quanto o tigrinho?"
-**Fonte:** The Decision Lab, "Disposition effect" (thedecisionlab.com); Grupo A2, Conteúdo II (2026).
+**Fonte:** The Decision Lab, "Disposition effect" (thedecisionlab.com).
