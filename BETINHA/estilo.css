@@ -215,3 +215,69 @@ div[data-testid="stForm"] {
     align-items: flex-end;
   }
 }
+
+/* =========================================================================
+   Correção de cores (força tema claro no chat, botões do topo e inputs)
+   ========================================================================= */
+
+/* 1. Output do bot: força a fonte escura (--tinta) em todo o texto da resposta */
+div[data-testid="stChatMessage"],
+div[data-testid="stChatMessage"] p,
+div[data-testid="stChatMessage"] li,
+div[data-testid="stChatMessage"] span,
+div[data-testid="stChatMessage"] div {
+  color: var(--tinta) !important;
+}
+
+/* 2. Caixa de texto (abaixo): deixa o fundo interno claro e o texto escuro */
+div[data-testid="stChatInput"],
+div[data-testid="stChatInput"] > div,
+div[data-testid="stChatInputContainer"] {
+  background-color: var(--cartao) !important;
+  color: var(--tinta) !important;
+}
+div[data-testid="stChatInput"] textarea {
+  background-color: transparent !important;
+  color: var(--tinta) !important;
+  caret-color: var(--acento) !important;
+}
+div[data-testid="stChatInput"] textarea::placeholder {
+  color: var(--tinta-3) !important;
+}
+div[data-testid="stChatInput"] button {
+  color: var(--tinta-2) !important;
+}
+
+/* 3. Botões "Menu" (esquerda), "Preciso de ajuda" (direita) e botões gerais */
+.stButton > button:not([kind="primary"]),
+[data-testid="stPopover"] button,
+[data-testid="stPopoverButton"] {
+  background-color: var(--cartao) !important;
+  color: var(--tinta) !important;
+  border: 1px solid var(--borda) !important;
+  border-radius: 10px !important;
+}
+.stButton > button:not([kind="primary"]) p,
+.stButton > button:not([kind="primary"]) span,
+[data-testid="stPopover"] button p,
+[data-testid="stPopover"] button span {
+  color: var(--tinta) !important;
+}
+.stButton > button:not([kind="primary"]):hover,
+[data-testid="stPopover"] button:hover {
+  border-color: var(--acento) !important;
+  background-color: var(--acento-suave) !important;
+}
+
+[data-testid="stPopoverBody"] {
+  background-color: var(--cartao) !important;
+  color: var(--tinta) !important;
+  border: 1px solid var(--borda) !important;
+}
+[data-testid="stPopoverBody"] p,
+[data-testid="stPopoverBody"] li,
+[data-testid="stPopoverBody"] span,
+.st-key-barra_acoes label,
+.st-key-barra_acoes p {
+  color: var(--tinta) !important;
+}
