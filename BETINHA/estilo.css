@@ -281,3 +281,46 @@ div[data-testid="stChatInput"] button {
 .st-key-barra_acoes p {
   color: var(--tinta) !important;
 }
+
+/* ---------- Rodapé organizado da resposta (Nome técnico e Fonte) ---------- */
+.rodape-betinha {
+  margin-top: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  background-color: var(--papel-2);
+  border: 1px solid var(--borda);
+  border-left: 3px solid var(--acento);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.rodape-betinha .meta-linha {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.rodape-betinha .meta-badge {
+  background-color: var(--acento-suave);
+  color: var(--acento) !important;
+  border: 1px solid #E5C5B5;
+  font-weight: 600;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+}
+.rodape-betinha .meta-valor {
+  font-weight: 600;
+  color: var(--tinta) !important;
+}
+.rodape-betinha .meta-rotulo {
+  font-weight: 600;
+  color: var(--tinta-2) !important;
+}
+.rodape-betinha .meta-fonte {
+  color: var(--tinta-2) !important;
+}

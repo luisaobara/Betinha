@@ -359,7 +359,65 @@ else:
 # ===========================================================================
 # PÁGINA 1 — CHAT
 # ===========================================================================
-def mostrar_mensagem(papel: str, texto: str) -> None:
+def formatar_resposta(texto: str, ocultar_pergunta_repetida: bool = False) -> str:
+    """Separa 'Fonte:' e 'Quer saber mais?' em um rodapé visual organizado."""
+    linhas = texto.strip().splitlines()
+    corpo = []
+    fonte = None
+    termo_tecnico = None
+    pergunta_extra = None
+
+    for linha in linhas:
+        l_limpa = linha.strip()
+        # 1. Identifica a linha de Fonte
+        if re.match(r"^\*?fontes?\s*:", l_limpa, flags=re.I):
+            fonte = re.sub(r"^\*?fontes?\s*:\s*", "", l_limpa, flags=re.I).strip(" *.")
+            continue
+
+        # 2. Identifica a linha "Quer saber mais?"
+        if "quer saber mais" in l_limpa.lower() or "pode me perguntar" in l_limpa.lower():
+            resto = re.sub(r"^.*?quer\s+saber\s+mais\?\s*", "", l_limpa, flags=re.I)
+            partes = re.split(r"voc[eê]\s+pode\s+me\s+perguntar\s*:?", resto, flags=re.I)
+
+            parte_termo = partes[0].strip(" ·|-–—.*_\"'“”")
+            parte_termo = re.sub(r"^nome\s+t[eé]cnico\s*:\s*", "", parte_termo, flags=re.I).strip(" ·|-–—.*_\"'“”")
+            if parte_termo:
+                termo_tecnico = parte_termo
+
+            if len(partes) > 1:
+                pergunta_extra = partes[1].strip(" ·|-–—*_\"'“”")
+            continue
+
+        corpo.append(linha)
+
+    texto_principal = sem_formula("\n".join(corpo).strip())
+
+    # Monta o cartão de rodapé se houver informações extras
+    itens_rodape = []
+    if termo_tecnico:
+        itens_rodape.append(
+            f'<div class="meta-linha"><span class="meta-badge">Nome técnico</span> '
+            f'<span class="meta-valor">{html.escape(termo_tecnico)}</span></div>'
+        )
+    if fonte:
+        itens_rodape.append(
+            f'<div class="meta-linha"><span class="meta-rotulo">Fonte:</span> '
+            f'<span class="meta-fonte">{html.escape(fonte)}</span></div>'
+        )
+    if pergunta_extra and not ocultar_pergunta_repetida:
+        itens_rodape.append(
+            f'<div class="meta-linha"><span class="meta-rotulo">Para aprofundar:</span> '
+            f'<span class="meta-fonte">“{html.escape(pergunta_extra)}”</span></div>'
+        )
+
+    if itens_rodape:
+        rodape_html = f'<div class="rodape-betinha">{"".join(itens_rodape)}</div>'
+        return f"{texto_principal}\n\n{rodape_html}"
+
+    return texto_principal
+
+
+def mostrar_mensagem(papel: str, texto: str, eh_ultima: bool = False) -> None:
     """Pessoa: só o balão (sem ícone). Betinha: com o rostinho dela."""
     if papel == "user":
         seguro = html.escape(texto).replace("$", "&#36;").replace("\n", "<br>")
@@ -367,7 +425,8 @@ def mostrar_mensagem(papel: str, texto: str) -> None:
                     unsafe_allow_html=True)
     else:
         with st.chat_message("assistant", avatar=config.AVATAR_ASSISTENTE):
-            st.markdown(sem_formula(texto))
+            st.markdown(formatar_resposta(texto, ocultar_pergunta_repetida=eh_ultima),
+                        unsafe_allow_html=True)
 
 
 def perguntas_sugeridas(texto: str) -> list[str]:
@@ -460,9 +519,11 @@ def pagina_chat(digitada: str | None):
             )
 
     # Histórico
-    for m in st.session_state.mensagens:
-        mostrar_mensagem(m["role"], m["content"])
-    if not digitada and not st.session_state.pergunta_pendente:
+    tem_nova_pergunta = bool(digitada or st.session_state.pergunta_pendente)
+    for idx, m in enumerate(st.session_state.mensagens):
+        eh_ultima = (idx == len(st.session_state.mensagens) - 1) and not tem_nova_pergunta
+        mostrar_mensagem(m["role"], m["content"], eh_ultima=eh_ultima)
+    if not tem_nova_pergunta:
         botoes_seguir()
 
     # Pergunta nova: digitada ou vinda de um botão
@@ -489,6 +550,7 @@ def pagina_chat(digitada: str | None):
     historico = montar_historico(st.session_state.mensagens, config.MENSAGENS_DE_HISTORICO)
 
     with st.chat_message("assistant", avatar=config.AVATAR_ASSISTENTE):
+        espaco_resposta = st.empty()
         with st.spinner("Pensando…"):
             fluxo = responder(cliente, config.MODELO_CHAT, instrucoes, historico, config.TEMPERATURA)
             primeiro = next(fluxo, "")
@@ -500,9 +562,16 @@ def pagina_chat(digitada: str | None):
                 texto_original.append(pedaco)
                 yield sem_formula(pedaco)
 
-        st.write_stream(continuar())
+        with espaco_resposta.container():
+            st.write_stream(continuar())
 
-    st.session_state.mensagens.append({"role": "assistant", "content": "".join(texto_original)})
+        resposta_completa = "".join(texto_original)
+        espaco_resposta.markdown(
+            formatar_resposta(resposta_completa, ocultar_pergunta_repetida=True),
+            unsafe_allow_html=True,
+        )
+
+    st.session_state.mensagens.append({"role": "assistant", "content": resposta_completa})
     botoes_seguir()
 
 
