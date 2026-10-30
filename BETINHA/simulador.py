@@ -124,7 +124,7 @@ def validar(p: Parametros) -> list[str]:
     esperado = aportado * (1 - p.margem_casa)
 
     # Cenário alternativo: investir o mesmo valor no início de cada período
-       taxas = (1 + p.taxa_investimento) ** fracoes - 1
+    taxas = (1 + p.taxa_investimento) ** fracoes - 1
     investimento = np.zeros(n_periodos + 1)
     for k in range(n_periodos):
         investimento[k + 1] = (investimento[k] + gasto[k]) * (1 + taxas[k])
