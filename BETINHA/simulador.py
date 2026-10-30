@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 PERIODOS_POR_ANO = {"semana": 52, "mês": 12}
-
+DIAS_NO_ANO = 365
 
 @dataclass
 class Parametros:
@@ -69,13 +69,20 @@ def valor_esperado_por_aposta(valor: float, margem: float) -> float:
 # ---------------------------------------------------------------------------
 # Simulação
 # ---------------------------------------------------------------------------
-def _converter_frequencia(p: Parametros) -> tuple[str, int]:
-    """Converte a frequência escolhida em (período da simulação, apostas por período)."""
+def dias_do_periodo(numero: int) -> int:
+    """Só para apostas por dia: períodos 1 a 52 do ano têm 7 dias; o 53º tem 1 dia."""
+    return 1 if numero % 53 == 0 else 7
+
+
+def montar_periodos(p: Parametros) -> tuple[str, np.ndarray, np.ndarray]:
+    """Divide o horizonte em períodos: (nome, apostas em cada período, fração do ano de cada período).
+    Por dia: 52 semanas de 7 dias + 1 dia = 365 dias por ano."""
     if p.frequencia == "dia":
-        return "semana", p.quantidade * 7
-    if p.frequencia == "semana":
-        return "semana", p.quantidade
-    return "mês", p.quantidade
+        dias = np.array([dias_do_periodo(k) for k in range(1, 53 * p.anos + 1)])
+        return "semana", p.quantidade * dias, dias / DIAS_NO_ANO
+    n = PERIODOS_POR_ANO["mês" if p.frequencia == "mês" else "semana"]
+    nome = "mês" if p.frequencia == "mês" else "semana"
+    return nome, np.full(n * p.anos, p.quantidade), np.full(n * p.anos, 1 / n)
 
 
 def validar(p: Parametros) -> list[str]:
@@ -93,26 +100,23 @@ def validar(p: Parametros) -> list[str]:
     return erros
 
 
-def simular(p: Parametros) -> Resultado:
-    periodo, apostas_por_periodo = _converter_frequencia(p)
-    periodos_ano = PERIODOS_POR_ANO[periodo]
-    n_periodos = p.anos * periodos_ano
+    periodo, apostas, fracoes = montar_periodos(p)
+    n_periodos = len(apostas)
 
     chance = probabilidade_real(p.odd_media, p.margem_casa)
-    gasto_por_periodo = apostas_por_periodo * p.valor_aposta
+    gasto = apostas * p.valor_aposta           # quanto sai do bolso em cada período
 
     # Sorteio: quantas apostas ganhou em cada período de cada simulação
     gerador = np.random.default_rng(p.semente)
-    vitorias = gerador.binomial(apostas_por_periodo, chance,
-                                size=(p.simulacoes, n_periodos))
-    lucro_periodo = vitorias * p.valor_aposta * p.odd_media - gasto_por_periodo
+    vitorias = gerador.binomial(apostas, chance, size=(p.simulacoes, n_periodos))
+    lucro_periodo = vitorias * p.valor_aposta * p.odd_media - gasto
 
     # Lucro acumulado ao longo do tempo (começa em zero)
     acumulado = np.zeros((p.simulacoes, n_periodos + 1))
     acumulado[:, 1:] = np.cumsum(lucro_periodo, axis=1)
 
-    t = np.arange(n_periodos + 1)
-    aportado = gasto_por_periodo * t
+    aportado = np.concatenate([[0.0], np.cumsum(gasto)])
+    eixo_anos = np.concatenate([[0.0], np.cumsum(fracoes)])
 
     # "Saldo" = quanto dinheiro a pessoa teria: o que colocou + lucro/prejuízo
     saldo_apostas = aportado + acumulado
@@ -120,15 +124,14 @@ def simular(p: Parametros) -> Resultado:
     esperado = aportado * (1 - p.margem_casa)
 
     # Cenário alternativo: investir o mesmo valor no início de cada período
-    taxa_periodo = (1 + p.taxa_investimento) ** (1 / periodos_ano) - 1
-    if taxa_periodo > 0:
-        investimento = gasto_por_periodo * (((1 + taxa_periodo) ** t - 1) / taxa_periodo) * (1 + taxa_periodo)
-    else:
-        investimento = aportado.astype(float)
+       taxas = (1 + p.taxa_investimento) ** fracoes - 1
+    investimento = np.zeros(n_periodos + 1)
+    for k in range(n_periodos):
+        investimento[k + 1] = (investimento[k] + gasto[k]) * (1 + taxas[k])
 
     finais = acumulado[:, -1]
     total_aportado = float(aportado[-1])
-    total_apostas = apostas_por_periodo * n_periodos
+    total_apostas = int(apostas.sum())
 
     resumo = {
         "total_apostado": total_aportado,
@@ -152,7 +155,7 @@ def simular(p: Parametros) -> Resultado:
     return Resultado(
         parametros=p,
         periodo=periodo,
-        eixo_tempo_anos=t / periodos_ano,
+        eixo_tempo_anos=eixo_anos,
         aportado=aportado,
         percentis=percentis,
         esperado=esperado,
