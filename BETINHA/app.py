@@ -864,6 +864,7 @@ def pagina_simulador():
     with st.expander("Como o simulador faz as contas"):
         st.markdown(
             "- Ele imagina que você aposta sempre o mesmo valor, na mesma odd e com a mesma frequência.\n"
+            "- Um ano tem 365 dias, 52 semanas ou 12 meses (por exemplo: 1 aposta por dia = 365 apostas no ano).\n"
             "- Cada aposta é sorteada no computador, respeitando a chance real de ganhar. "
             "Isso é repetido 2.000 vezes, como se 2.000 pessoas apostassem do mesmo jeito.\n"
             "- O dinheiro ganho não é apostado de novo.\n"
