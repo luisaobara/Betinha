@@ -99,7 +99,7 @@ def validar(p: Parametros) -> list[str]:
         erros.append("O horizonte precisa ser de pelo menos 1 ano.")
     return erros
 
-
+def simular(p: Parametros) -> Resultado:
     periodo, apostas, fracoes = montar_periodos(p)
     n_periodos = len(apostas)
 
