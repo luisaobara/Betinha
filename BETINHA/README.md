@@ -113,6 +113,7 @@ cenário, mude `PARAMETROS` no início do arquivo e rode de novo.
 ## Hipóteses do simulador
 
 - Mesmo valor, mesma odd média, mesma frequência; ganhos não são reapostados.
+- Um ano = 365 dias, 52 semanas ou 12 meses. Apostas por dia são agrupadas em 52 semanas de 7 dias + 1 dia.
 - Chance real = (1 ÷ odd) × (1 − margem da casa) ⇒ perda média = margem × total apostado.
 - Vitórias por período ~ Binomial(apostas no período, chance real); 2.000 simulações.
 - Investimento: mesmo valor aplicado no início de cada período a uma taxa anual fixa, sem impostos.
