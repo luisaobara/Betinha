@@ -54,7 +54,7 @@ PERGUNTAS = [
 ]
 
 PALAVRAS_PALPITE = ["aposte no", "aposta em", "recomendo a casa", "melhor casa", "melhores odds são"]
-CANAIS_AJUDA = ["188", "cvv", "caps", "ubs", "autoexclus", "jogadores anônimos"]
+CANAIS_AJUDA = ["188", "cvv", "caps", "ubs", "meu sus digital", "jogadores anônimos"]
 
 
 def primeira_frase(texto: str) -> str:

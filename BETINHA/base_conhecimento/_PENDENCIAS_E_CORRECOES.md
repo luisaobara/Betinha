@@ -45,3 +45,21 @@
   imediatez da recompensa em caça-níqueis); cartão de crédito (Portaria 722 → Portaria 615/2024).
 - Conferir ainda: a origem do dado "89% gastam todo mês / 39% entre R$ 50 e R$ 200 / 8,6% mais de
   R$ 500" (Conteúdo I não diz de onde veio) e o veículo da notícia "R$ 3 bilhões em tributos via LAI".
+
+## F. Revisão completa da base (11/11/2026)
+
+- Base atualizada com a proibição das bets (MP 1.394/2026, de 25/09/2026): fichas sobre legalidade,
+  sites ".bet.br", propaganda, fiscalização, imposto, autoexclusão e controle de gastos reescritas;
+  a ficha sobre crédito e saque virou "O que aconteceu com o dinheiro que eu tinha nas bets?".
+- 7 fichas repetidas apagadas (4 no arquivo 02 e 3 no arquivo 06); as formas de perguntar delas
+  foram juntadas às fichas que ficaram. A base passou de 75 para 68 fichas.
+- Fontes simplificadas ("artigo X, de Y") e conferidas; fontes comerciais, de apostas ou pagas
+  retiradas (lista no _REGISTRO_DE_FONTES.md). Fichas de definição, contas e Simulador ficaram sem fonte.
+- Contas corrigidas: exemplo do "todo mundo ganha" (o grupo perdia R$ 100, não empatava);
+  "500 apostas perto de R$ 500" virou "perda esperada de R$ 500 e quase 9 em cada 10 no prejuízo";
+  moeda com 4 caras seguidas em 20 jogadas (quase 50%).
+- Fichas que citavam o gráfico antigo do Simulador (faixa sombreada, "onde as simulações
+  terminaram") passaram a citar o gráfico de três linhas e as 100 bolinhas.
+- Dados que não foram confirmados saíram: mediana de R$ 2.500 para maiores de 50 anos,
+  comparação com a aposentadoria, "um terço dos jovens endividados", 15% e 22% do Datafolha.
+- Pendente: se o Congresso não aprovar a MP em 120 dias, as fichas do arquivo 08 precisam ser revistas.

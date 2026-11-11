@@ -32,7 +32,7 @@ assistente_bets/
 ├── imagens/betinha.png     # rosto da Betinha (troque pelo desenho de vocês)
 ├── base_conhecimento/      # A BASE: um arquivo .md por tema
 │   ├── _MODELO.md, _REGISTRO_DE_FONTES.md, _PENDENCIAS_E_CORRECOES.md
-│   └── 00_... a 09_...md   # 67 fichas em 10 temas
+│   └── 00_... a 09_...md   # 68 fichas em 10 temas
 ├── .streamlit/config.toml  # tema claro
 ├── requirements.txt
 └── .env                    # sua chave (NÃO enviar para o GitHub)
@@ -40,7 +40,7 @@ assistente_bets/
 
 ## Base de conhecimento
 
-67 fichas em 10 temas, construídas a partir das entregas Conteúdo I a IV e dos
+68 fichas em 10 temas, construídas a partir das entregas Conteúdo I a IV e dos
 feedbacks dos professores:
 
 | Arquivo | Tema (requisito do workbook) |
@@ -75,7 +75,7 @@ Formato de cada ficha:
 
 - Cada `## ` = uma ficha. Salvou um arquivo? O app recarrega sozinho.
 - Até 150 mil caracteres, a base inteira vai para o Gemini a cada pergunta
-  (hoje ela tem ~80 mil). Acima disso, o app usa busca por similaridade.
+  (hoje ela tem cerca de 80 mil). Acima disso, o app usa busca por similaridade.
 
 ## Testes
 
@@ -90,7 +90,7 @@ escopo) e salva as respostas, com checagens automáticas, em
   (Conversar, Simulador, Mito ou verdade, Sobre). Depois de
   escolher uma aba, ele continua aberto (para fechar sozinho, mude `FECHAR_MENU_AO_ESCOLHER` para `True`). As cores do menu ficam em `MENU_FUNDO`, `MENU_TEXTO` etc., e os símbolos das abas em `ICONES`, no início do `app.py`.
 - **Perguntas clicáveis:** as perguntas do "Quer saber mais?" aparecem como botões abaixo da resposta.
-- **🆘 Preciso de ajuda:** botão no topo com UBS/CAPS, autoexclusão do gov.br e Jogadores Anônimos.
+- **Preciso de ajuda:** botão no topo com UBS/CAPS, atendimento on-line pelo Meu SUS Digital, CVV (188) e Jogadores Anônimos.
 - **🔎 Letra maior:** aumenta o texto do app inteiro.
 - **Simulador em forma de frase:** a pessoa completa "Eu aposto R$ __ por vez, __ vezes por __, durante __ anos."
 - **Calculadora da margem:** abaixo do botão Simular. A pessoa copia as odds de todos os resultados de uma

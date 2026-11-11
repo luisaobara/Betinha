@@ -61,17 +61,17 @@ QUIZ = [
         "pergunta_betinha": "Existe alguma estratégia ou fórmula que garanta ganhar nas apostas?",
     },
     {
-        "frase": "No Brasil, os sites de apostas autorizados terminam em \".bet.br\".",
+        "frase": "Hoje, apostar em bets é proibido no Brasil.",
         "verdade": True,
-        "explicacao": "Só empresas autorizadas pelo Ministério da Fazenda podem funcionar, "
-                      "e o endereço delas termina obrigatoriamente em \".bet.br\".",
+        "explicacao": "Uma medida provisória proibiu as bets e os jogos online em 25 de setembro de 2026. "
+                      "Os sites que continuam funcionando estão fora da lei e não dão nenhuma garantia a quem aposta.",
         "pergunta_betinha": "Apostar em bets é legal no Brasil?",
     },
     {
         "frase": "Um adolescente pode apostar se usar a conta de um adulto.",
         "verdade": False,
-        "explicacao": "Menores de 18 anos são proibidos de apostar. As casas precisam conferir a identidade, "
-                      "inclusive com reconhecimento facial.",
+        "explicacao": "Menores de 18 anos nunca puderam apostar, nem usando a conta de um adulto. "
+                      "E, desde setembro de 2026, as bets estão proibidas para todo mundo.",
         "pergunta_betinha": "Um adolescente pode criar conta e apostar?",
     },
     {

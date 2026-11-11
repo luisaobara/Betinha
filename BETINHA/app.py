@@ -33,7 +33,7 @@ SUGESTOES = [
     "Como funcionam as bets?",
     "O que é uma odd?",
     "Por que a casa sempre ganha?",
-    "Apostar em bets é legal no Brasil?",
+    "As bets foram proibidas no Brasil?",
 ]
 
 # Abas do menu (a ordem da lista é a ordem no menu)
@@ -142,6 +142,9 @@ st.html("""<style>
 .st-key-calc_margem_res { margin-top: .2rem; }
 /* glossário */
 .glos-tema { font-weight: 700; font-size: 1.05rem; color: var(--tinta); margin: 1rem 0 .1rem; }
+[class*="st-key-glos_"] button { padding: .5rem 1.1rem !important; min-height: 2.6rem !important; border-radius: 12px !important; }
+[class*="st-key-glos_"] button p { white-space: nowrap; }
+.pensando-previa { color: var(--tinta-2); }
 .glos-exemplo { background: var(--papel-2); border-radius: 10px; padding: .5rem .8rem; margin: .2rem 0 .3rem; font-size: .95rem; }
 /* menos espaço no alto de todas as abas */
 .block-container, [data-testid="stMainBlockContainer"] { padding-top: .9rem !important; }
@@ -362,9 +365,9 @@ with st.container(key="barra_topo", horizontal=True, horizontal_alignment="distr
             st.markdown(
                 "**Se apostar está trazendo prejuízo ou sofrimento, você não está sozinho.**\n\n"
                 ":material/local_hospital: **SUS**: procure uma **UBS** (posto de saúde) ou um **CAPS** perto de você.\n\n"
-                ":material/block: **Bloquear as bets**: a [autoexclusão do gov.br]"
-                "(https://www.gov.br/pt-br/servicos/plataforma-centralizada-de-autoexclusao-apostas) "
-                "bloqueia todas as casas autorizadas de uma vez, de graça.\n\n"
+                ":material/videocam: **Atendimento on-line e gratuito**: no app **Meu SUS Digital**, "
+                "opção \"Saúde Mental para Quem Aposta\" (também para familiares).\n\n"
+                ":material/call: **CVV**: ligue **188**, de graça e a qualquer hora, se estiver muito angustiado.\n\n"
                 ":material/groups: **Jogadores Anônimos**: grupos de apoio gratuitos."
             )
 
@@ -481,7 +484,7 @@ def formatar_resposta(texto: str, ocultar_pergunta_repetida: bool = False) -> st
             parte_termo = partes[0].strip(" ·|-–—.*_\"'“”")
             parte_termo = re.sub(r"^nome\s+t[eé]cnico\s*:\s*", "", parte_termo, flags=re.I).strip(" ·|-–—.*_\"'“”")
             if parte_termo:
-                termo_tecnico = parte_termo
+                termo_tecnico = parte_termo[0].upper() + parte_termo[1:]
 
             if len(partes) > 1:
                 pergunta_extra = partes[1].strip(" ·|-–—*_\"'“”")
@@ -554,7 +557,7 @@ def botoes_seguir():
     msgs = st.session_state.mensagens
     if not msgs or msgs[-1]["role"] != "assistant":
         return
-    perguntas = perguntas_sugeridas(msgs[-1]["content"])
+    perguntas = msgs[-1].get("sugestoes") or perguntas_sugeridas(msgs[-1]["content"])
     if not perguntas:
         return
     st.markdown('<div class="rotulo-seguir">Toque para perguntar:</div>', unsafe_allow_html=True)
@@ -705,7 +708,10 @@ def pagina_chat(digitada: str | None):
             unsafe_allow_html=True,
         )
 
-    st.session_state.mensagens.append({"role": "assistant", "content": resposta_completa})
+    sugestoes = perguntas_sugeridas(resposta_completa) or st.session_state.get("sugestoes_reserva") or []
+    st.session_state.sugestoes_reserva = []
+    st.session_state.mensagens.append({"role": "assistant", "content": resposta_completa,
+                                       "sugestoes": sugestoes[:2]})
     botoes_seguir()
 
 
@@ -1027,9 +1033,23 @@ def recomecar_quiz():
     st.session_state.quiz_resposta = None
 
 
-def perguntar_do_quiz(pergunta: str):
+def perguntar_do_quiz(pergunta: str, relacionadas: list[str] | None = None):
+    """Leva a pergunta para o chat. As 'relacionadas' viram botões embaixo da resposta
+    caso a própria resposta não traga a linha 'Você pode me perguntar'."""
     st.session_state.pergunta_pendente = pergunta
+    st.session_state.sugestoes_reserva = [q for q in (relacionadas or []) if q]
     st.session_state.pagina = CONVERSAR
+
+
+def relacionada_da_base(pergunta: str) -> str:
+    """Pega a 'Pergunta relacionada' da ficha da base que tem esse título."""
+    if buscador is None:
+        return ""
+    for t in buscador.trechos:
+        if t.pergunta.strip() == pergunta.strip():
+            achou = re.search(r'Pergunta relacionada: "([^"]+)"', t.texto)
+            return achou.group(1) if achou else ""
+    return ""
 
 
 def pagina_quiz():
@@ -1074,7 +1094,7 @@ def pagina_quiz():
     st.markdown(f'<div class="quiz-feedback {classe}"><b>{titulo}</b><br>{html.escape(item["explicacao"])}</div>',
                 unsafe_allow_html=True)
     c1, c2 = st.columns(2)
-    c1.button("Perguntar mais à Betinha", icon=":material/chat_bubble_outline:", on_click=perguntar_do_quiz, args=(item["pergunta_betinha"],),
+    c1.button("Perguntar mais à Betinha", icon=":material/chat_bubble_outline:", on_click=perguntar_do_quiz, args=(item["pergunta_betinha"], [relacionada_da_base(item["pergunta_betinha"])]),
               width="stretch", key=f"perg_{i}")
     rotulo = "Próxima" if i + 1 < total else "Ver meu resultado"
     c2.button(rotulo, icon=":material/arrow_forward:", on_click=proxima_quiz, type="primary", width="stretch", key=f"prox_{i}")
@@ -1140,7 +1160,8 @@ def pagina_glossario():
                     st.markdown(f'<div class="glos-exemplo"><b>Exemplo:</b> '
                                 f'{html.escape(g["exemplo"]).replace("$", "&#36;")}</div>', unsafe_allow_html=True)
                 st.button("Perguntar mais à Betinha", icon=":material/chat_bubble_outline:", key=f"glos_{i}",
-                          type="tertiary", on_click=perguntar_do_quiz, args=(g["pergunta_betinha"],))
+                          on_click=perguntar_do_quiz,
+                          args=(g["pergunta_betinha"], [relacionada_da_base(g["pergunta_betinha"])]))
 
 
 # ---------------------------------------------------------------------------
@@ -1155,6 +1176,38 @@ digitada = None
 conversa_comecou = bool(st.session_state.mensagens or st.session_state.pergunta_pendente)
 if st.session_state.pagina == CONVERSAR and conversa_comecou and buscador is not None:
     digitada = st.chat_input("Escreva aqui a sua pergunta sobre apostas…")
+
+def previa_do_chat():
+    """Desenha a conversa com a pergunta nova e 'Pensando…', sem chamar a Betinha ainda."""
+    with st.container(horizontal=True, horizontal_alignment="right", key="nivel_topo"):
+        escolher_nivel("nivel_conversa")
+    for m in st.session_state.mensagens:
+        mostrar_mensagem(m["role"], m["content"])
+    mostrar_mensagem("user", st.session_state.pergunta_pendente)
+    with st.chat_message("assistant", avatar=config.AVATAR_ASSISTENTE):
+        st.markdown('<span class="pensando-previa">Pensando…</span>', unsafe_allow_html=True)
+
+
+@st.fragment(run_every=0.3)
+def _gatilho_resposta():
+    """Depois que a prévia termina de desenhar (e a aba anterior some), recomeça o app
+    para a Betinha responder."""
+    if st.session_state.get("_disparar_resposta"):
+        st.session_state._disparar_resposta = False
+        st.rerun()
+
+
+# Ao chegar no chat vindo de outra aba (glossário, quiz, simulador), o Streamlit só apaga a
+# aba anterior quando termina uma rodada. Então a primeira rodada só desenha a prévia; a
+# resposta vem na rodada seguinte, já sem a "página fantasma" por trás.
+pagina_mudou = st.session_state.get("_pagina_desenhada") != st.session_state.pagina
+st.session_state["_pagina_desenhada"] = st.session_state.pagina
+if pagina_mudou and st.session_state.pagina == CONVERSAR and st.session_state.pergunta_pendente:
+    with area:
+        previa_do_chat()
+    _gatilho_resposta()
+    st.session_state._disparar_resposta = True
+    st.stop()
 
 with area:
     {
